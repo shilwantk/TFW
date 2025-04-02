@@ -1,0 +1,22 @@
+
+mutation DeviceRegistration($input: DeviceRegisterInput) {
+  deviceRegister(input: $input) {
+    result {
+      deviceId
+    }
+    errors {
+      message
+    }
+  }
+}
+
+mutation DeviceUnregister($input: DeviceUnregisterInput) {
+  deviceUnregister(input: $input) {
+    result {
+      deviceId
+    }
+    errors {
+      message
+    }
+  }
+}

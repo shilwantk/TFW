@@ -1,0 +1,60 @@
+fragment MinCarePlan on CarePlan {
+    id
+    name
+    description
+    status
+    focus
+    endAtIso
+    createdAtIso
+    periodDurationDays
+    durationInDays
+    organizationId
+    complianceScore {
+        percent
+        raw
+    }
+    monitors {
+        id
+    }
+    attachments(labels: $labels) {
+       ...AttachmentModel
+    }
+    tasks(status: $taskStatus) {
+      id
+    }
+}
+
+query ViewingRoutinesQuery($id: ID, $user: ID, $order:String, $status: [String!], $labels:[String!], $taskStatus: String) {
+    viewing(org: $id, user: $user) {
+        org {
+            id
+            carePlans(order: $order, status: $status) {
+            ...MinCarePlan
+            }
+        }
+        user {
+            id
+            attachments(labels: $labels) {
+                ...AttachmentModel
+            }
+            firstName
+            lastName
+        }
+    }
+}
+
+
+query RoutinesQuery($id: ID, $order:String, $status: [String!], $labels:[String!], $taskStatus: String) {
+    user(id: $id) {
+     id
+     attachments(labels: $labels) {
+       ...AttachmentModel
+     }
+     firstName
+     lastName
+     carePlans(order: $order, status: $status) {
+            ...MinCarePlan
+        }
+    }
+}
+

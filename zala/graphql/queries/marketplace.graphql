@@ -1,0 +1,82 @@
+fragment AttachmentModel on Attachment {
+    id
+    label
+    contentUrl
+}
+
+fragment PreferenceModel on Preference {
+    id
+    key
+    value
+    createdAtIso
+    updatedAtIso
+}
+
+fragment AddressModel on AddressesStreet {
+    id
+    label
+    line1
+    line2
+    state
+    city
+    zip
+    address
+    csz
+}
+
+fragment PhoneNumberModel on AddressesPhone {
+    id
+    label
+    number
+}
+
+fragment SuperUserOrg on Organization {
+   id
+   name
+   providers {
+       nodes {
+           ...SuperUser
+       }
+   }
+}
+
+fragment SuperUser on Provider {
+    id
+    attachments(labels: $labels) {
+        ...AttachmentModel
+    }
+    firstName
+    lastName
+    preferences {
+        ...PreferenceModel
+    }
+    organizations {
+        id
+        name
+        roles {
+            ...UserRole
+        }
+        providers {
+            nodes {
+                id
+            }
+        }
+    }
+}
+
+ query SuperUsersQuery($id: ID, $labels:[String!]) {
+        org(id: $id) {
+            children {
+                ...SuperUserOrg
+            }
+        }
+    }
+
+query SuperUserAttachments($id: ID, $labels: [String!]) {
+  user(id: $id) {
+    id
+    attachments(labels: $labels) {
+      ...AttachmentModel
+    }
+  }
+}

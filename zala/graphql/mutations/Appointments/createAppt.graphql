@@ -1,0 +1,21 @@
+mutation AppointmentCreateMutation($input: AppointmentCreateInput) {
+        apptCreate(input: $input) {
+            errors {
+                message
+            }
+            appointment {
+                id
+                params
+                provider {
+                    id
+                }
+            }
+        }
+    }
+
+
+mutation AppointmentCancel($input: IDInput) {
+  apptCancel(input:$input) {
+    success
+  }
+}

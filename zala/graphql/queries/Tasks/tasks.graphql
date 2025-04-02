@@ -1,0 +1,42 @@
+fragment TodoTask on TaskInterval {
+        id
+        beginAt
+        endAt
+        total
+        compliance
+        period
+        task {
+            ...TaskModel
+        }
+}
+
+query TodaysTasks($date: String) {
+  me {
+    tasksTodo {
+     id
+     key
+     timeFrames
+     dayIntervals(date:$date) {
+        ...TodoTask
+      }
+    }
+  }
+}
+
+query TaskVitals($metrics: [String!]!, $sinceEpoch: Int, $untilEpoch: Int) {
+  me {
+  dataValues(metrics:$metrics, sinceEpoch:$sinceEpoch, untilEpoch:$untilEpoch) {
+        nodes {
+            id
+            key
+            values
+            beginAt
+            displayUnits
+            notes {
+                ...AnswerNoteModel
+            }
+      }
+    }
+  }
+}
+

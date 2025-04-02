@@ -1,0 +1,27 @@
+fragment AgreementModel on Agreement {
+    id
+    kind
+    docMarkdown
+}
+
+fragment AssessmentModel on Assessment {
+    id
+    kind
+    name
+    program
+}
+
+query FetchConsents($org: ID!) {
+    org(id: $org) {
+    assessments {
+      nodes {
+        ...AssessmentModel
+      }
+    }
+    agreements {
+      nodes {
+        ...AgreementModel
+      }
+    }
+  }
+}

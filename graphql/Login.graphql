@@ -1,0 +1,59 @@
+fragment ErrorModel on Error {
+    code
+    message
+}
+
+fragment EmailModel on AddressesEmail {
+    id
+    label
+    address
+}
+
+fragment UserRole on Role {
+    id
+    name
+    orgId
+    role
+    count
+    org {
+        id
+        name
+    }
+}
+
+fragment MinUser on User {
+    id
+    firstName
+    fullName
+    token
+    emails {
+        ...EmailModel
+    }
+    roleNames
+    roles {
+        ...UserRole
+    }
+}
+
+mutation Login($input: UserLoginInput!) {
+    login(input: $input) {
+        errors {
+            ...ErrorModel
+        }
+        user {
+            ...MinUser
+        }
+    }
+}
+
+
+mutation UserRequestPasswordReset($email: String!, $org: ID) {
+  userRequestPasswordReset(email: $email, org: $org) {
+    success
+    errors {
+        ...ErrorModel
+    }
+  }
+}
+
+

@@ -1,0 +1,16 @@
+mutation CreateAttachment($auth: String, $input: AttachmentCreateInput) {
+    attachmentCreate(auth:$auth, input:$input) {
+        errors {
+            message
+        }
+        attachment {
+            ...AttachmentModel
+        }
+    }
+}
+
+mutation DeleteAttachment($input: IDInput) {
+  attachmentRemove(input: $input) {
+    success
+  }
+}

@@ -1,0 +1,9 @@
+
+mutation RoutineAcceptMutation($input: CarePlanAcceptInput) {
+        careplanAccept(input: $input) {
+            errors {
+                message
+            }
+            success
+        }
+    }

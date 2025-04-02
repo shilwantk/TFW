@@ -1,0 +1,80 @@
+
+mutation CreateHabitPlan($id: ID!, $input: CarePlanCreateInput) {
+  careplanCreate(orgId: $id, input: $input) {
+    errors {
+      message
+    }
+    carePlan {
+      id
+    }
+  }
+}
+
+mutation CreateHabit($input: TaskCreateInput) {
+  taskCreate(input: $input) {
+    errors {
+      message
+    }
+    success
+    task {
+      id
+    }
+  }
+}
+
+mutation AssignHabitPlan($input: CarePlanAssignInput) {
+  careplanAssign(input:$input) {
+    errors {
+      message
+    }
+    success
+    carePlan {
+      id
+    }
+  }
+}
+
+mutation StartHabitPlan($input: CarePlanAcceptInput) {
+  careplanAccept(input: $input) {
+    carePlan {
+      id
+    }
+  }
+}
+
+
+mutation ActivateHabit($input: IDInput) {
+  taskActivate(input:$input) {
+    success
+    task {
+      id
+    }
+  }
+}
+
+mutation RemoveHabit($input: IDInput) {
+  taskRemove(input:$input) {
+    success
+    task {
+      id
+    }
+  }
+}
+
+mutation CompleteHabit($input: IDInput) {
+  taskComplete(input:$input) {
+    success
+    task {
+      id
+    }
+  }
+}
+
+mutation CancelHabit($input: IDInput) {
+  taskCancel(input:$input) {
+    success
+    task {
+      id
+    }
+  }
+}

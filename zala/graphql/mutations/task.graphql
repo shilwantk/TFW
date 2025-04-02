@@ -1,0 +1,10 @@
+mutation CompleteTask($input: TaskIntervalCompleteInput) {
+  taskIntervalComplete(input: $input){
+    success
+    result {
+      task {
+        key
+      }
+    }
+  }
+}

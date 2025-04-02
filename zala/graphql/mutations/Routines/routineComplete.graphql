@@ -1,0 +1,13 @@
+
+mutation RoutineCompleteMutation($input: IDInput) {
+  careplanComplete(input: $input){
+              errors {
+                message
+            }
+    success
+    carePlan {
+      status
+    }
+  }
+}
+

@@ -1,0 +1,39 @@
+fragment MetricModel on Metric {
+    id
+    key
+    labels
+    names
+    title
+    storedAs
+    units
+    cumulative
+}
+query ApplicationData {
+    application {
+        version
+    }
+}
+
+query Metrics {
+    application {
+        metricCategories
+        metrics {
+            ...MetricModel
+        }
+    }
+}
+
+query MetricCategories {
+    application {
+        metricCategories
+    }
+}
+
+query MetricsByCategories($categories: [String!]){
+    application {
+        metrics (categories: $categories) {
+            ...MetricModel
+        }
+    }
+}
+

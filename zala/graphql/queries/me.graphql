@@ -1,0 +1,93 @@
+
+query SessionCheck {
+  me {
+    id
+  }
+}
+
+fragment DeviceModel on Device {
+    id
+    name
+    kind
+    deviceId
+    createdAt
+    updatedAt
+    lastSentAt
+}
+
+fragment Account on User {
+    id
+    addresses {
+        ...AddressModel
+    }
+    attachments(labels: $labels) {
+        ...AttachmentModel
+    }
+    emails {
+        ...EmailModel
+    }
+    phones {
+        ...PhoneNumberModel
+    }
+    roles {
+        ...UserRole
+    }
+    firstName
+    lastName
+    fullName
+    initials
+    dob
+    preferences {
+        ...PreferenceModel
+    }
+}
+
+fragment ProviderModel on User {
+    id
+    attachments(labels: $labels) {
+        ...AttachmentModel
+    }
+    addresses {
+        ...AddressModel
+    }
+    firstName
+    lastName
+    preferences {
+        ...PreferenceModel
+    }
+}
+
+fragment PersonAppointment on Appointment {
+    id
+    kind
+    params
+    provider {
+        ...ProviderModel
+    }
+    scheduledAt
+    scheduledAtIso
+    service {
+        ...MarketplaceAppointmentService
+    }
+    status
+}
+
+query AccountQuery($labels:[String!]) {
+        me {
+         ...Account
+           personAppointments(status: ["booked","pending", "completed", "confirmed"], ordering: "scheduledAtIso") {
+                nodes {
+                    ...PersonAppointment
+                }
+            }
+        }
+    }
+
+
+query Devices($status:String) {
+  me {
+    devices(status: $status) {
+      ...DeviceModel
+    }
+  }
+}

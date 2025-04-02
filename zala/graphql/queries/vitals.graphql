@@ -1,0 +1,80 @@
+
+fragment PageInfoModel on PageInfo {
+    hasNextPage
+    endCursor
+}
+
+fragment AnswerNoteModel on AnswerNote {
+    id
+    body
+    private
+    subject
+    subjectType
+}
+
+
+fragment AnswerModel on Answer {
+    id
+    key
+    labels
+    names
+    units
+    data
+}
+
+fragment DataValueSourceModel on DataValueSource {
+    id
+    identifier
+    name
+}
+
+fragment DataValueModel on DataValue {
+    id
+    key
+    values
+    units
+    createdAtIso
+    endAtIso
+    displayUnits
+    periodIso
+    
+    asAnswer {
+        ...AnswerModel
+    }
+    
+    metric {
+        ...MetricModel
+    }
+    
+    source {
+        ...DataValueSourceModel
+    }
+    
+    notes {
+        ...AnswerNoteModel
+    }
+}
+
+
+query Vitals($metrics: [String!]) {
+    me {
+        latestData(metrics: $metrics) {
+            ...DataValueModel
+        }
+    }
+}
+
+
+query VitalsByTime($metrics: [String!]!, $sinceEpoch: Int, $untilEpoch: Int, $order: String!, $first: Int, $after: String) {
+     me {
+         dataValues(metrics: $metrics, sinceEpoch: $sinceEpoch, untilEpoch: $untilEpoch, order: $order, first: $first, after: $after) {
+             nodes {
+                 ...DataValueModel
+             }
+             pageInfo {
+                 ...PageInfoModel
+             }
+         }
+    }
+}
+

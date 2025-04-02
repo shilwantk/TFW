@@ -1,0 +1,151 @@
+fragment DayScheduleModel on ServiceDaySchedule {
+    id
+    day
+    dayName
+    startTime
+    endTime
+}
+
+fragment UserModel on User {
+    id
+    addresses {
+        ...AddressModel
+    }
+    attachments(labels: $labels) {
+        ...AttachmentModel
+    }
+    emails {
+        ...EmailModel
+    }
+    phones {
+        ...PhoneNumberModel
+    }
+    roles {
+        ...UserRole
+    }
+    firstName
+    lastName
+    fullName
+    initials
+    dob
+    preferences {
+        ...PreferenceModel
+    }
+}
+
+query FetchPreference($id:ID) {
+  user(id:$id) {
+        preferences {
+        ...PreferenceModel
+    }
+  }
+}
+
+
+query SuperUser($id:ID, $labels:[String!]) {
+  user(id:$id) {
+    ...UserModel
+  }
+}
+
+
+fragment ServiceModel on Service {
+    id
+    attachments(labels: ["banner"]) {
+        ...AttachmentModel
+    }
+    desc
+    groupPrimary
+    kind
+    organizationId
+    status
+    title
+}
+
+  query SuperUserAppointmentsQuery($ids: [ID!]) {
+        organizations(ids: $ids) {
+            nodes {
+                id
+                name
+                services(ordering: "status") {
+                    ...ServiceModel
+                }
+            }
+        }
+    }
+
+
+ query SuperUserServiceBookSingleServiceQuery($id: ID, $service: ID, $date: String, $provider: ID) {
+         org(id: $id) {
+            id
+            service(id: $service) {
+                id
+                addresses {
+                    id
+                    address
+                }
+                availableTimesIso(date: $date, providerId: $provider)
+                attachments(labels: ["banner"]) {
+                    id
+                    label
+                    contentUrl
+                }
+                durationMins
+                daySchedules {
+                    ...DayScheduleModel
+                }
+                kind
+                title
+            }
+            users(role: "provider") {
+                nodes {
+                    id
+                    addresses {
+                        ...AddressModel
+                    }
+                }
+            }
+        }
+}
+
+ query SuperUserServiceBookQuery($id: ID) {
+        org(id: $id) {
+            id
+            services {
+                id
+                addresses {
+                    id
+                    address
+                }
+                durationMins
+                groupPrimary
+                kind
+                providers {
+                    id
+                    attachments(labels: ["profile_picture"]) {
+                        id
+                        label
+                        contentUrl
+                    }
+                    firstName
+                    lastName
+                    preferences {
+                        id
+                        key
+                        value
+                    }
+                }
+                params
+                supportsVirtual
+                title
+            }
+            users(role: "provider") {
+                nodes {
+                    id
+                    addresses {
+                        ...AddressModel
+                    }
+                }
+            }
+        }
+    }

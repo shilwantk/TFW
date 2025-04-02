@@ -1,0 +1,9 @@
+
+mutation WorkoutRoutineUpdate($input: WorkoutRoutineUpdateInput) {
+  workoutRoutineUpdate(input: $input) {
+    success
+    result {
+        ...WorkoutRoutineModel
+    }
+  }
+}

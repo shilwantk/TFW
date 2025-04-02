@@ -1,0 +1,71 @@
+fragment TaskModel on Task {
+  id
+  daysOfMonth
+  daysOfWeek
+  interval
+  key
+  minValue
+  maxValue
+  testType
+  mealInfo
+  data
+  metric {
+       id
+       key
+       title
+       cumulative
+       units
+  }
+  status
+  title
+  timeFrames
+  unit
+  compliance
+  desc
+  carePlan {
+     id
+     name
+      owner {
+      id
+      attachments(labels:["profile_picture"]){
+         ...AttachmentModel
+      }
+      fullName
+    }
+  }
+}
+
+fragment MarketPlaceRoutine on CarePlan {
+      id
+      attachments(labels: $labels) {
+          ...AttachmentModel
+      }
+      focus
+      description
+      durationInDays
+      name
+      requirements
+      monitors {
+        id
+        metric
+      }
+      tasks(status: $taskStatus) {
+       ...TaskModel
+    }
+}
+
+query MarketPlaceRoutineDetailsQuery($id: ID, $ids: [ID!], $labels: [String!], $taskStatus: String) {
+        org(id: $id) {
+            carePlans(ids: $ids) {
+                ...MarketPlaceRoutine
+            }
+        }
+    }
+    
+query MarketPlaceRoutineForUserQuery($id: ID, $ids: [ID!], $labels: [String!], $taskStatus: String) {
+    user(id: $id) {
+        carePlans(ids: $ids) {
+            ...MarketPlaceRoutine
+        }
+    }
+}

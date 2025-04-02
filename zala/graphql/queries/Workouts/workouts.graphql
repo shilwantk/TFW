@@ -1,0 +1,148 @@
+
+fragment MinWorkoutRoutineModel on WorkoutRoutine {
+        id
+        title
+        status
+        duration
+        creator {
+            id
+            attachments(labels:["profile_picture"]){
+                ...AttachmentModel
+            }
+            fullName
+        }
+}
+
+
+fragment WorkoutActivityModel on WorkoutActivity {
+        id
+        key
+        name
+        videoUrl
+        uses
+        categoryCode
+}
+
+fragment WorkoutSetModel on WorkoutSet {
+       id
+       rest
+       status
+       reps
+       rpe
+       distance
+       weight
+       time
+}
+
+
+fragment WorkoutPlanGroupActivityModel on WorkoutPlanGroupActivity {
+        id
+        position
+        starred
+        activity {
+            ...WorkoutActivityModel
+        }
+        sets {
+            ...WorkoutSetModel
+        }
+}
+
+
+fragment WorkoutPlanGroupModel on WorkoutPlanGroup {
+        id
+        title
+        position
+        status
+        activityLinks {
+            ...WorkoutPlanGroupActivityModel
+        }
+}
+fragment WorkoutPlanModel on WorkoutPlan {
+        id
+        status
+        title
+        desc
+        frequency
+        groups {
+            ...WorkoutPlanGroupModel
+        }
+        creator {
+            id
+            fullName
+            initials
+            attachments(labels:["profile_picture"]){
+                ...AttachmentModel
+            }
+        }
+}
+
+fragment WorkoutRoutineModel on WorkoutRoutine {
+        id
+        title
+        status
+        duration
+        creator {
+            id
+            attachments(labels:["profile_picture"]){
+                ...AttachmentModel
+            }
+            fullName
+        }
+        plans {
+            nodes {
+                ...WorkoutPlanModel
+            }
+        }
+}
+
+query WorkoutRoutineById($id: ID!) {
+  me {
+   workoutRoutine(id: $id) {
+        ...WorkoutRoutineModel
+    }
+  }
+}
+
+
+query WorkoutRoutines($status: String) {
+  me {
+    workoutRoutines(status: $status) {
+     nodes {
+        ...WorkoutRoutineModel
+     }
+    }
+  }
+}
+
+
+query WorkoutPlansById($id: ID) {
+  me {
+   workoutPlan(id: $id) {
+        ...WorkoutPlanModel
+    }
+  }
+}
+
+query WorkoutPlans($status: String) {
+  me {
+    workoutPlans(status: $status) {
+        nodes {
+            ...WorkoutPlanModel
+        }
+    }
+  }
+}
+
+
+query CompleteWorkoutPlans($kinds: [String!]!) {
+  me {
+    healthSnaps(kinds: $kinds){
+      nodes {
+        id
+        kind
+        name
+        beginAt
+      }
+    }
+  }
+}

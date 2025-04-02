@@ -1,0 +1,23 @@
+
+mutation UpdateUser($input:UserUpdateInput, $labels:[String!]) {
+  userUpdate(input:$input) {
+    user {
+      ...Account
+    }
+  }
+}
+
+
+mutation UserCreateMutation($input: UserCreateInput) {
+        userCreate(input: $input) {
+            errors {
+                message
+            }
+            user {
+                id
+                firstName
+                lastName
+                token
+            }
+        }
+    }

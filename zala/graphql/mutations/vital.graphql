@@ -1,0 +1,42 @@
+mutation CreateVital($input: UserAddDataInput) {
+    userAddData(input: $input) {
+        errors {
+            ...ErrorModel
+        }
+        user {
+            id
+        }
+    }
+}
+
+
+fragment VitalModel on DataValue {
+    id
+    key
+    values
+    units
+    createdAtIso
+    endAtIso
+    displayUnits
+    periodIso
+    period
+    metric {
+        ...MetricModel
+    }
+    
+    source {
+        ...DataValueSourceModel
+    }
+}
+
+
+query AccountVitalsQuery($id: ID, $metrics: [String!]!, $sinceEpoch: Int, $untilEpoch: Int) {
+        user(id: $id) {
+            id
+            dataValues(metrics: $metrics, sinceEpoch: $sinceEpoch, untilEpoch: $untilEpoch) {
+                nodes {
+                    ...VitalModel
+                }
+            }
+        }
+    }

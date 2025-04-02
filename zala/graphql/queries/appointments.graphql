@@ -1,0 +1,81 @@
+fragment MarketplaceAppointmentService on Service {
+     id
+     attachments(labels: $labels) {
+         ...AttachmentModel
+     }
+     desc
+     groupPrimary
+     kind
+     organizationId
+     status
+     title
+     durationMins
+     params
+     supportsVirtual
+     addresses {
+        ...AddressModel
+    }
+                
+}
+
+
+query ViewingMarketplaceSuperUserAppointmentsQuery($id: ID!, $status: [String!], $ordering:String!, $labels:[String!]) {
+    viewing(org: $id) {
+        org {
+         id
+         name
+         services(status:$status, ordering: $ordering) {
+             ...MarketplaceAppointmentService
+         }
+         users(role: "provider") {
+             nodes {
+                 id
+                 addresses {
+                     ...AddressModel
+                 }
+             }
+         }
+       }
+    }
+}
+
+ query MarketplaceSuperUserAppointmentsQuery($ids: [ID!], $status: [String!], $ordering:String!, $labels:[String!]) {
+        organizations(ids: $ids) {
+            nodes {
+                id
+                name
+                services(status:$status, ordering: $ordering) {
+                    ...MarketplaceAppointmentService
+                }
+                users(role: "provider") {
+                    nodes {
+                        id
+                        addresses {
+                            ...AddressModel
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+query MyAppointments($startEpoch:Int!, $endEpoch: Int!, $labels:[String!]) {
+  me {
+    personAppointments(status: ["booked", "confirmed"], startEpoch:$startEpoch, endEpoch:$endEpoch, ordering: "scheduledAtIso") {
+        nodes {
+            ...PersonAppointment
+        }
+    }
+  }
+}
+
+query AppointmentByService($service: ID, $status: [String!], $labels:[String!]) {
+  me {
+    personAppointments(service: $service, status: $status) {
+        nodes {
+            ...PersonAppointment
+        }
+    }
+  }
+}

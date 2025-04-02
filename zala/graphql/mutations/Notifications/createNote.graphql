@@ -1,0 +1,23 @@
+
+mutation NotificationCreateMutation($input: UserNotificationCreateInput!) {
+        notificationCreate(input: $input) {
+            errors {
+                message
+            }
+            success
+        }
+    }
+
+
+mutation NotificationMarkRead($input: UserNotificationMarkReadInput!) {
+  notificationMarkRead(input:$input){
+    success
+  }
+}
+
+
+mutation NotificationRemove($input: IDInput!) {
+  notificationRemove(input:$input){
+    success
+  }
+}

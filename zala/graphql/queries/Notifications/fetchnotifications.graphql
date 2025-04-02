@@ -1,0 +1,18 @@
+fragment NotificationModel on UserNotification {
+     id
+     createdAtIso
+     content
+     subject
+     readAtIso
+}
+
+query NotificationsQuery {
+        me {
+            id
+            notifications {
+                nodes {
+                    ...NotificationModel
+                }
+            }
+        }
+    }
