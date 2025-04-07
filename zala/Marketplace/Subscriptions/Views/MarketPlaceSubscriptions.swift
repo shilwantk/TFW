@@ -14,7 +14,17 @@ struct MarketPlaceSubscriptions: View {
     @State var service: StripeService = StripeService()
     @State var accountService: AccountService = AccountService()
     @Binding var didComplete: Bool
+    @State var isLoading: Bool = false
+    
     var body: some View {
+        VStack(alignment: .leading) {
+            ZStack(alignment:.top) {
+                if isLoading {
+                    LoadingBannerView()
+                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                }
+            }
+        }
         ScrollView {
             VStack(spacing: 12) {
                 ForEach(service.subscriptions, id:\.id) { sub in
@@ -57,9 +67,12 @@ struct MarketPlaceSubscriptions: View {
             }
         })
         .task {
+            
+            updateLoading()
             service.fetchCustomerSubscriptions(status: .active) { complete in
                 service.allAttachmentsFor(superUser: superUser.id!, handler: { complete in
                     service.stripeProductsFor(superUser: superUser.id!, category: .subscription)
+                    updateLoading()
                 })
             }
             
@@ -97,6 +110,12 @@ struct MarketPlaceSubscriptions: View {
                     }
                 }
             }
+        }
+    }
+    
+    fileprivate func updateLoading() {
+        withAnimation {
+            isLoading.toggle()
         }
     }
 }
