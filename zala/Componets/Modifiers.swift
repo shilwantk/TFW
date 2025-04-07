@@ -540,6 +540,10 @@ extension View {
     func isChartScrollableAxes(isScrollable: Binding<Bool>) -> some View {
         return modifier(ChartViewModifier(isScrollable: isScrollable))
     }
+    
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
 
 extension Image {

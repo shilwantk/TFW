@@ -21,65 +21,72 @@ struct RecordMealView: View {
     @State var isLoading: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 25) {
-            ZStack(alignment:.top) {
-                if isLoading {
-                    LoadingBannerView(message: "Saving...")
-                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+        ZStack {
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    hideKeyboard()
                 }
-            }
-            ScrollView {
-                Text("Select meal date and time")
-                    .style(size:.x20, weight: .w400)
-                    .align(.leading)
-                DateDropDownView(
-                    key: "Date & Time",
-                    selectedDate: $time,
-                    dateAndTime: .constant(true),
-                    isDob: false,
-                    showKey: true,
-                    darkMode: true)
-                VStack(alignment: .leading, spacing: 25) {
-                    Text("Want to take a photo of your meal?")
+            VStack(alignment: .leading, spacing: 25) {
+                ZStack(alignment:.top) {
+                    if isLoading {
+                        LoadingBannerView(message: "Saving...")
+                            .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                    }
+                }
+                ScrollView {
+                    Text("Select meal date and time")
                         .style(size:.x20, weight: .w400)
                         .align(.leading)
-                    if selectedImage.size.height > 0 {
-                        ZStack(alignment: .topTrailing) {
-                            Image(uiImage: selectedImage)
-                                .resizable()
-                                .interpolation(.medium)
-                                .aspectRatio(contentMode: .fill)
-                                .frame(maxWidth: .infinity, maxHeight: 350, alignment: .center)
-                            Button {
-                                selectedImage = UIImage()
-                            } label: {
-                                Image.close
+                    DateDropDownView(
+                        key: "Date & Time",
+                        selectedDate: $time,
+                        dateAndTime: .constant(true),
+                        isDob: false,
+                        showKey: true,
+                        darkMode: true)
+                    VStack(alignment: .leading, spacing: 25) {
+                        Text("Want to take a photo of your meal?")
+                            .style(size:.x20, weight: .w400)
+                            .align(.leading)
+                        if selectedImage.size.height > 0 {
+                            ZStack(alignment: .topTrailing) {
+                                Image(uiImage: selectedImage)
+                                    .resizable()
+                                    .interpolation(.medium)
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(maxWidth: .infinity, maxHeight: 350, alignment: .center)
+                                Button {
+                                    selectedImage = UIImage()
+                                } label: {
+                                    Image.close
+                                }
+                            }
+                        } else {
+                            BorderedButton(title: "Add Photo", titleColor: Theme.shared.blue, color: Theme.shared.blue) {
+                                cameraSelected.toggle()
                             }
                         }
-                    } else {
-                        BorderedButton(title: "Add Photo", titleColor: Theme.shared.blue, color: Theme.shared.blue) {
-                            cameraSelected.toggle()
+                    }.padding(.top)
+                    VStack(alignment: .leading) {
+                        Text("Is there any additional information you would like to add?")
+                            .style(size: .x18, weight: .w400)
+                            .align(.leading)
+                        VStack(alignment: .leading, spacing: 0.0) {
+                            TextEditor(text: $note)
+                                .scrollContentBackground(.hidden)
+                                .background(Theme.shared.mediumBlack)
+                                .frame(maxHeight: 350)
                         }
-                    }
-                }.padding(.top)
-                VStack(alignment: .leading) {
-                    Text("Is there any additional information you would like to add?")
-                        .style(size: .x18, weight: .w400)
-                        .align(.leading)
-                    VStack(alignment: .leading, spacing: 0.0) {
-                        TextEditor(text: $note)
-                            .scrollContentBackground(.hidden)
-                            .background(Theme.shared.mediumBlack)
-                            .frame(maxHeight: 350)
-                    }
-                    .frame(minHeight: 350)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.shared.mediumBlack))
-                }.padding(.top)
-            }
-            Spacer()
-            StandardButton(title: "SUBMIT") {
-                save()
+                        .frame(minHeight: 350)
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 8).fill(Theme.shared.mediumBlack))
+                    }.padding(.top)
+                }
+                Spacer()
+                StandardButton(title: "SUBMIT") {
+                    save()
+                }
             }
         }
         .padding()
