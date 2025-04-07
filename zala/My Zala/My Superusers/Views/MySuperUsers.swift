@@ -17,6 +17,7 @@ struct MySuperUsers: View {
     @State var stripeService: StripeService = StripeService()
     @State var isLoading: Bool = false
     @Binding var state: SessionTransitionState
+    @State private var hasLoadedOnce = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -59,6 +60,8 @@ struct MySuperUsers: View {
         })
         .toolbarWith(title: "MARKETPLACE", session: $state, completion: { type in })
         .task {
+            guard !hasLoadedOnce else { return }
+            hasLoadedOnce = true
             updateLoading()
             stripeService.getCustomer()
             stripeService.fetchCustomerSubscriptions(status: .active) { complete in
