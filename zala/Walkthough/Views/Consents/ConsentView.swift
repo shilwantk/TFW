@@ -25,12 +25,17 @@ struct ConsentView: View {
     @State private var image: UIImage? = nil
     @State private var allImages: [SignatureImageModel] = []
     @State private var pdfData: ConsentData? = nil
+    @State private var showBanner = false
     
     var body: some View {
         VStack {
             ZStack(alignment:.top) {
                 if isLoading {
                     LoadingBannerView(message: "Saving...")
+                        .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
+                }
+                if showBanner {
+                    LoadingBannerView(message: "Please agree and sign.")
                         .transition(AnyTransition.move(edge: .top).combined(with: .opacity))
                 }
             }
@@ -133,7 +138,15 @@ struct ConsentView: View {
     }
     
     fileprivate func isComplete() -> Bool {
-        return image != nil  &&  didAgree
+        if image == nil || !didAgree {
+            showBanner = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                showBanner = false
+            }
+            return false
+        } else {
+            return image != nil  &&  didAgree
+        }
     }
     
     fileprivate func updateLoading() {
