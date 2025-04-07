@@ -38,6 +38,10 @@ struct PickerSheet: View {
                     Text(item.title).style(color:color(item: item), size: .large)
                 }
             }.pickerStyle(WheelPickerStyle())
+            .onAppear {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                                    to: nil, from: nil, for: nil)
+            }
             if showSelect {
                 StandardButton(title: buttonTitle) {
                     actionTapped?()
