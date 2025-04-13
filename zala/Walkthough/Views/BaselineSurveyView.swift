@@ -152,10 +152,16 @@ struct BaselineSurveyView: View {
             }
         }
         .onChange(of: didDismiss) { oldValue, newValue in
+            service.currentQuestionIndex = 0
             dismiss()
         }
         .onAppear(perform: {
-            self.currentQuestion = service.getQuestion()
+            Task {
+                    while currentQuestion == nil && !service.complete {
+                        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 sec
+                        currentQuestion = service.getQuestion()
+                    }
+                }
         })
     }
     
